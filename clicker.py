@@ -14,7 +14,7 @@ from PyQt5.QtCore import Qt, pyqtSignal, QPoint, QThread, QPropertyAnimation, QE
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, 
                              QFrame, QLabel, QStackedWidget, QButtonGroup, 
                              QPushButton, QSlider, QComboBox, QGraphicsOpacityEffect)
-from PyQt5.QtGui import QFont, QMouseEvent
+from PyQt5.QtGui import QFont, QMouseEvent, QIcon
 
 # ================= 去除 Windows DWM 窗口白边/阴影 =================
 if sys.platform == "win32":
@@ -847,6 +847,16 @@ if __name__ == '__main__':
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
     app.setFont(QFont("Microsoft YaHei", 9))
+    
+    # 设置窗口图标（兼容开发模式和 PyInstaller 打包模式）
+    if getattr(sys, 'frozen', False):
+        _base = Path(sys._MEIPASS)
+    else:
+        _base = Path(__file__).parent
+    _icon = _base / "icon.png"
+    if _icon.exists():
+        app.setWindowIcon(QIcon(str(_icon)))
+    
     window = EasyClickWindow()
     window.show()
     sys.exit(app.exec_())
